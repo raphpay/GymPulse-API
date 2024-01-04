@@ -15,6 +15,9 @@ struct WorkoutController: RouteCollection {
         workouts.post(use: create)
         workouts.get(use: index)
         workouts.put(use: update)
+        workouts.group(":\(Constants.WORKOUT_ID_ROUTE)") { workout in
+            workout.delete(use: delete)
+        }
     }
     
     // MARK: - /workouts route
@@ -48,4 +51,11 @@ struct WorkoutController: RouteCollection {
     }
     
     // MARK: - Delete
+    func delete(req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        Workout
+            .find(req.parameters.get(Constants. WORKOUT_ID_ROUTE), on: req.db)
+            .unwrap(or: Abort(.notFound))
+            .flatMap { $0.delete(on: req.db) }
+            .transform(to: .ok)
+    }
 }

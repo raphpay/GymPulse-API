@@ -9,4 +9,5 @@ import Foundation
 
 class Constants {
     static let WORKOUTS_TABLE = "workouts"
+    static let WORKOUT_ID_ROUTE = "workoutID"
 }
