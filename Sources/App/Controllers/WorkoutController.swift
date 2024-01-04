@@ -53,7 +53,7 @@ struct WorkoutController: RouteCollection {
     // MARK: - Delete
     func delete(req: Request) throws -> EventLoopFuture<HTTPStatus> {
         Workout
-            .find(req.parameters.get(Constants. WORKOUT_ID_ROUTE), on: req.db)
+            .find(req.parameters.get(Constants.WORKOUT_ID_ROUTE), on: req.db)
             .unwrap(or: Abort(.notFound))
             .flatMap { $0.delete(on: req.db) }
             .transform(to: .ok)
