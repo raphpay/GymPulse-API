@@ -20,7 +20,5 @@ struct CreateWorkout: Migration {
         database
             .schema(Constants.WORKOUTS_TABLE)
             .delete()
-    }
-    
-    
+    }    
 }

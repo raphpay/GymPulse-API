@@ -14,6 +14,7 @@ struct WorkoutController: RouteCollection {
         // Use the methods
         workouts.post(use: create)
         workouts.get(use: index)
+        workouts.put(use: update)
     }
     
     // MARK: - /workouts route
@@ -30,4 +31,21 @@ struct WorkoutController: RouteCollection {
     func index(req: Request) throws -> EventLoopFuture<[Workout]> {
         Workout.query(on: req.db).all()
     }
+    
+    // MARK: - Update
+    func update(req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        let workout: Workout = try req.content.decode(Workout.self)
+        
+        return Workout
+            .find(workout.id, on: req.db)
+            .unwrap(or: Abort(.notFound))
+            .flatMap {
+                $0.title = workout.title
+                return $0
+                    .update(on: req.db)
+                    .transform(to: .ok)
+            }
+    }
+    
+    // MARK: - Delete
 }
