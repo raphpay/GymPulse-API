@@ -23,6 +23,7 @@ struct WorkoutController: RouteCollection {
     // MARK: - /workouts route
     // MARK: - Create
     func create(req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        // Get the object from the request's content and decode it
         let workout: Workout = try req.content.decode(Workout.self)
         
         return workout
@@ -32,11 +33,14 @@ struct WorkoutController: RouteCollection {
     
     // MARK: - Read
     func index(req: Request) throws -> EventLoopFuture<[Workout]> {
-        Workout.query(on: req.db).all()
+        Workout
+            .query(on: req.db)
+            .all()
     }
     
     // MARK: - Update
     func update(req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        // Get the object from the request's content and decode it
         let workout: Workout = try req.content.decode(Workout.self)
         
         return Workout
@@ -50,8 +54,10 @@ struct WorkoutController: RouteCollection {
             }
     }
     
+    // MARK: - /workouts/<id> route
     // MARK: - Delete
     func delete(req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        // Find the request's parameter for the given ID
         Workout
             .find(req.parameters.get(Constants.WORKOUT_ID_ROUTE), on: req.db)
             .unwrap(or: Abort(.notFound))
